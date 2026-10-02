@@ -1,0 +1,45 @@
+# CaffeinateBar
+
+Single-purpose native macOS menu bar toggle for `caffeinate`.
+
+- Icon: SF Symbol coffee — `cup.and.saucer` (outlined = inactive) /
+  `cup.and.saucer.fill` (filled = active)
+- Menu: live status line (with countdown), Turn On Indefinitely,
+  Turn On For… (15m / 30m / 1h / 2h / 5h), Turn Off, Quit
+- Caffeinate Assertions submenu: `-d -i -m -s -u` toggles (persisted)
+- Check External Every submenu: 5s / 10s (default) / 30s
+
+## Minimal polling, not constant polling
+
+- ONE `Timer` (default every 10s, tolerance set so the OS coalesces wakeups)
+  that does a single `proc_listpids` + `proc_name` syscall sweep to spot a
+  `caffeinate` started elsewhere (e.g. Terminal). No fork/exec, microseconds
+  per tick, ~0% CPU.
+- When our own child is running the tick skips the syscall entirely and only
+  refreshes the countdown label.
+- The menu also re-checks synchronously on open (`menuWillOpen`), so status
+  is always exact when you look at it.
+- Everything else is event-driven: menu actions + child `terminationHandler`.
+
+## Sessions survive restarts
+
+Timed sessions store their deadline; indefinite sessions store `wantedOn`.
+Relaunching resumes with the remaining time.
+
+## Build & run
+
+```sh
+./build.sh
+open CaffeinateBar.app
+```
+
+## Install
+
+```sh
+cp -R CaffeinateBar.app /Applications/
+open /Applications/CaffeinateBar.app
+# Login at boot: Settings → General → Login Items → + → CaffeinateBar
+```
+
+Debug aid: `defaults read com.slimane.caffeinatebar lastStatus` reports
+`active-own` / `active-external` / `inactive`.
