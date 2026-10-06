@@ -29,17 +29,25 @@ Relaunching resumes with the remaining time.
 ## Build & run
 
 ```sh
-./build.sh
+./build.sh            # app only
+./build.sh --dmg      # app + drag-and-drop installer (CaffeinateBar-2.0.dmg)
 open CaffeinateBar.app
 ```
 
 ## Install
 
-```sh
-cp -R CaffeinateBar.app /Applications/
-open /Applications/CaffeinateBar.app
-# Login at boot: Settings → General → Login Items → + → CaffeinateBar
-```
+Open `CaffeinateBar-2.0.dmg` and drag CaffeinateBar into Applications.
+Login at boot: Settings → General → Login Items → + → CaffeinateBar.
+
+## App icon
+
+`Assets/` holds the full icon pipeline:
+
+- `make-icon.swift` — renders the 1024px coffee source (`icon-1024.png`)
+- `caffenated.icon` — Icon Composer project (macOS 26 format)
+- `caffenated-iOS-Default-1024@1x.png` — Icon Composer render export
+- `AppIcon.icns` is generated at build time (`sips` + `iconutil`) —
+  never committed, always reproducible via `./build.sh`
 
 Debug aid: `defaults read com.slimane.caffeinatebar lastStatus` reports
 `active-own` / `active-external` / `inactive`.

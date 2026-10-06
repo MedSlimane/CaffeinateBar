@@ -10,6 +10,8 @@
     <string>CaffeinateBar</string>
     <key>CFBundleDisplayName</key>
     <string>CaffeinateBar</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
     <key>CFBundleShortVersionString</key>
     <string>2.0</string>
     <key>CFBundleVersion</key>

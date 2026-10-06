@@ -1,3 +1,4 @@
 # Build output — rebuild with ./build.sh
 CaffeinateBar.app/
+*.dmg
 .DS_Store
